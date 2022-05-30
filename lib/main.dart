@@ -1,4 +1,3 @@
-import 'package:alan_voice/alan_callback.dart';
 import 'package:flutter/material.dart';
 import 'package:alan_voice/alan_voice.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,10 +7,8 @@ void main() {
 }
 
 final Uri _url = Uri.parse('https://www.google.com/search?q=');
-final Uri _gurl = Uri.parse('https://mail.google.com');
-final Uri _cvurl = Uri.parse('https://github.com/UgurCanYildiz');
-final Uri _lurl =
-    Uri.parse('https://www.linkedin.com/in/u%C4%9Fur-can-yildiz-3b7102233/');
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -38,7 +35,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
   _MyHomePageState() {
+
     AlanVoice.addButton(
         "4f69ce056ac603dd433520d3068bb3432e956eca572e1d8b807a3e2338fdd0dc/stage",
         buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT);
@@ -49,20 +49,48 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
         child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(onPressed: _lUrl, child: const Text("Linkedin")),
+            ElevatedButton(onPressed: () {
+                _launchUrl();
+            }, child: const Text("GOOGLE")),
             Padding(
               padding: const EdgeInsets.only(top: 3.0),
-              child: ElevatedButton(onPressed: _cvUrl, child: Text("Github")),
+              child: ElevatedButton(onPressed: () {}, child: Text("Mail")),
             )
           ],
         ),
@@ -71,12 +99,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _handleCommand(Map<String, dynamic> command) {
-    switch (command["command"]) {
+    switch (command["command"]){
       case "search":
         _launchUrl();
-        break;
-      case "mail":
-        _glaunchUrl();
         break;
       default:
         debugPrint("Hata");
@@ -86,16 +111,4 @@ class _MyHomePageState extends State<MyHomePage> {
 
 void _launchUrl() async {
   if (!await launchUrl(_url)) throw 'Could not launch $_url';
-}
-
-void _glaunchUrl() async {
-  if (!await launchUrl(_gurl)) throw 'Could not launch $_gurl';
-}
-
-void _cvUrl() async {
-  if (!await launchUrl(_cvurl)) throw 'Could not launch $_cvurl';
-}
-
-void _lUrl() async {
-  if (!await launchUrl(_lurl)) throw 'Could not launch $_lurl';
 }
