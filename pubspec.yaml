@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   alan_voice: ^3.5.0
   url_launcher: ^6.1.2
+  flutter_sms: ^2.3.2
 
 dev_dependencies:
   flutter_test:

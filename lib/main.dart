@@ -1,19 +1,27 @@
+import 'package:alan_voice/alan_callback.dart';
 import 'package:flutter/material.dart';
 import 'package:alan_voice/alan_voice.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
+///Fonksiyonlara gidicek olan adresler
+final Uri _surl = Uri.parse('sms:5550101234');
+final Uri _turl = Uri.parse('tel:+90-533-333-33-33');
 final Uri _url = Uri.parse('https://www.google.com/search?q=');
-
-
+final Uri _gurl = Uri.parse('https://mail.google.com');
+final Uri _cvurl = Uri.parse('https://github.com/UgurCanYildiz');
+final Uri _lurl =
+    Uri.parse('https://www.linkedin.com/in/u%C4%9Fur-can-yildiz-3b7102233/');
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  // Arayüz ve arka plan kısmı
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,62 +43,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   _MyHomePageState() {
-
+    ///Alan studio token ile bağlanma
     AlanVoice.addButton(
         "4f69ce056ac603dd433520d3068bb3432e956eca572e1d8b807a3e2338fdd0dc/stage",
         buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT);
 
-    /// Handle commands from Alan Studio
+    /// Alan Studiodan command ı alma.
     AlanVoice.onCommand.add((command) {
       _handleCommand(command.data);
     });
   }
 
-
-
+  ///Arayüz kısmı ("Tusların Oldugu yer")
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(onPressed: () {
-                _launchUrl();
-            }, child: const Text("GOOGLE")),
+            ElevatedButton(onPressed: _lUrl, child: const Text("Linkedin")),
             Padding(
               padding: const EdgeInsets.only(top: 3.0),
-              child: ElevatedButton(onPressed: () {}, child: Text("Mail")),
+              child: ElevatedButton(onPressed: _cvUrl, child: Text("Github")),
             )
           ],
         ),
@@ -98,17 +77,67 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  ///ALAN STUDİODAN GELEN Command a göre hangi fonksiyonu çağırcağını belirtir.
+
   void _handleCommand(Map<String, dynamic> command) {
-    switch (command["command"]){
+    switch (command["command"]) {
       case "search":
         _launchUrl();
         break;
+      case "call":
+        _tUrl();
+        break;
+      case "mail":
+        _glaunchUrl();
+        break;
+
+      ///(Calışmıyor)
+      case "SMS":
+        _sendSMS(message, recipents);
+        break;
+      //Programdan çıkış
+      case "exit":
+        SystemNavigator.pop();
+        break;
+
       default:
         debugPrint("Hata");
     }
   }
 }
 
+//GOOGLE SEARCH FONKSİYONU
 void _launchUrl() async {
   if (!await launchUrl(_url)) throw 'Could not launch $_url';
 }
+
+//MAİL FONKSİYONU
+void _glaunchUrl() async {
+  if (!await launchUrl(_gurl)) throw 'Could not launch $_gurl';
+}
+
+//CV FONKSİYONU
+void _cvUrl() async {
+  if (!await launchUrl(_cvurl)) throw 'Could not launch $_cvurl';
+}
+
+//LİNKEDİN FONKSİYONU
+void _lUrl() async {
+  if (!await launchUrl(_lurl)) throw 'Could not launch $_lurl';
+}
+
+//ARAMA FONKSİYONU
+void _tUrl() async {
+  if (!await launchUrl(_turl)) throw 'Could not launch $_turl';
+}
+
+//Sms fonksiyonu(Calışmıyor)
+void _sendSMS(String message, List<String> recipents) async {
+  String _result = await sendSMS(message: message, recipients: recipents)
+      .catchError((onError) {});
+  print(_result);
+}
+
+//Fonksiyona giricek no ve mesaj(Calışmıyor)
+String message = "This is a test message!";
+List<String> recipents = ["1234567890", "5556787676"];
